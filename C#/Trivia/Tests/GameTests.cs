@@ -9,55 +9,65 @@ using Xunit;
 namespace Tests;
 public class GameTests
 {
-    public class HowManyPlayers
+    public class HowManyPlayers : GameTests
     {
         [Fact]
-        public Task Should_ReturnZero_When_NoPlayerIsAdded()
+        public void Should_ReturnZero_When_NoPlayerIsAdded()
         {
             var sut = new Game();
 
             var result = sut.HowManyPlayers();
 
-            return Verifier.Verify(result);
+            result.Should().Be(0);
+        }
+
+        [Fact]
+        public void Should_ReturnPlayerNumber_When_PlayersAreAdded()
+        {
+            var sut = new Game();
+
+            AddPlayers(sut, 4);
+
+            var result = sut.HowManyPlayers();
+
+            result.Should().Be(4);
         }
     }
 
-    public class IsPlayable
+    public class IsPlayable : GameTests
     {
         [Fact]
-        public Task Should_ReturnFalse_When_NoPlayer()
+        public void Should_ReturnFalse_When_NoPlayer()
         {
             var sut = new Game();
 
             var result = sut.IsPlayable();
 
-            return Verifier.Verify(result);
+            result.Should().BeFalse();
         }
 
         [Fact]
-        public Task Should_ReturnFalse_When_NotEnoughPlayers()
+        public void Should_ReturnFalse_When_NotEnoughPlayers()
         {
             var sut = new Game();
-            sut.Add("Player 1");
+
+            AddPlayers(sut, 1);
 
             var result = sut.IsPlayable();
 
-            return Verifier.Verify(result);
+            result.Should().BeFalse();
         }
 
         [Fact]
-        public Task Should_ReturnTrue_When_EnoughPlayers()
+        public void Should_ReturnTrue_When_EnoughPlayers()
         {
             var sut = new Game();
 
-            for (var i = 1; i < 6; i++)
-            {
-                sut.Add("Player " + i);
-            }
+            AddPlayers(sut, 4);
 
             var result = sut.IsPlayable();
 
-            return Verifier.Verify(result);
+            result.Should().BeTrue();
         }
     }
 
@@ -87,6 +97,14 @@ public class GameTests
             sut.Add("Player 1");
 
             return Verifier.Verify(consoleWriter.ToString());
+        }
+    }
+
+    protected static void AddPlayers(Game sut, int count)
+    {
+        for (var i = 0; i < count; i++)
+        {
+            sut.Add("Player " + i);
         }
     }
 }
