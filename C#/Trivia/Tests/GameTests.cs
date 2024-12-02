@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using FluentAssertions;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 using Trivia;
 using VerifyXunit;
 using Xunit;
@@ -42,7 +45,6 @@ public class GameTests
             return Verifier.Verify(result);
         }
 
-
         [Fact]
         public Task Should_ReturnTrue_When_EnoughPlayers()
         {
@@ -56,6 +58,35 @@ public class GameTests
             var result = sut.IsPlayable();
 
             return Verifier.Verify(result);
+        }
+    }
+
+    public class AddPlayer
+    {
+        [Fact]
+        public void Should_IncreasePlayerCount()
+        {
+            StringWriter writer = new();
+            Console.SetOut(writer);
+
+            Game sut = new();
+
+            sut.Add("Player 1");
+
+            sut.HowManyPlayers().Should().Be(1);
+        }
+
+        [Fact]
+        public Task Should_LogPlayerAdded()
+        {
+            StringWriter consoleWriter = new();
+            Console.SetOut(consoleWriter);
+
+            Game sut = new();
+
+            sut.Add("Player 1");
+
+            return Verifier.Verify(consoleWriter.ToString());
         }
     }
 }
