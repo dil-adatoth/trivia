@@ -18,4 +18,44 @@ public class GameTests
             return Verifier.Verify(result);
         }
     }
+
+    public class IsPlayable
+    {
+        [Fact]
+        public Task Should_ReturnFalse_When_NoPlayer()
+        {
+            var sut = new Game();
+
+            var result = sut.IsPlayable();
+
+            return Verifier.Verify(result);
+        }
+
+        [Fact]
+        public Task Should_ReturnFalse_When_NotEnoughPlayers()
+        {
+            var sut = new Game();
+            sut.Add("Player 1");
+
+            var result = sut.IsPlayable();
+
+            return Verifier.Verify(result);
+        }
+
+
+        [Fact]
+        public Task Should_ReturnTrue_When_EnoughPlayers()
+        {
+            var sut = new Game();
+
+            for (var i = 1; i < 6; i++)
+            {
+                sut.Add("Player " + i);
+            }
+
+            var result = sut.IsPlayable();
+
+            return Verifier.Verify(result);
+        }
+    }
 }
